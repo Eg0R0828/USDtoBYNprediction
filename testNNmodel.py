@@ -1,18 +1,28 @@
 # -*- coding: utf-8 *-*
 
 
-import pandas, tensorflow, numpy
-from sklearn.preprocessing import LabelEncoder
-import matplotlib.pyplot as plt
+import pandas, tensorflow
 
 
-if __name__ == '__main__':
-    nn_model = tensorflow.keras.models.load_model('./nn_model.nn')
+def test_saved_nn_model(n, test_data_file_path='./testData.csv'):
+    try:
+        nn_model = tensorflow.keras.models.load_model('./nn_model.nn')
+    except BaseException:
+        print('ERROR: Saved NN-model file was deleted or damaged!')
+        return
 
-    data_frame = pandas.read_csv('./testData.csv', header=None)
+    try:
+        data_frame = pandas.read_csv(test_data_file_path, header=None)
+    except BaseException:
+        print('ERROR: Wrong test data set file path!')
+        return
+
     data_set = data_frame.values
     data = data_set.astype(float)
     data = data.reshape(1, data.shape[0], data.shape[1])
-    N = 50
 
-    print(nn_model.predict(data[:, 0:N, :]))
+    print(nn_model.predict(data[:, 0:n, :]))
+
+
+if __name__ == '__main__':
+    test_saved_nn_model(50)
